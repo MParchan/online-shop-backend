@@ -29,7 +29,7 @@ const createCategory = asyncHandler(async (req, res) => {
 //@access public
 const getCategory = asyncHandler(async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id);
+        const category = await Category.findById(req.params.id).exec();
         if (!category) {
             res.status(404);
             throw new Error("Category not found");
@@ -45,14 +45,34 @@ const getCategory = asyncHandler(async (req, res) => {
 //@route PUT /api/categories/:id
 //@access public
 const updateCategory = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Update category for ${req.params.id}` });
+    try {
+        const category = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!category) {
+            res.status(404);
+            throw new Error("Category not found");
+        }
+        res.status(200).json(category);
+    } catch {
+        res.status(404);
+        throw new Error("Category not found");
+    }
 });
 
 //@desc Delete category
 //@route DELETE /api/categories/:id
 //@access public
 const deleteCategory = asyncHandler(async (req, res) => {
-    res.status(200).json({ message: `Delete category for ${req.params.id}` });
+    try {
+        const category = await Category.findByIdAndDelete(req.params.id);
+        if (!category) {
+            res.status(404);
+            throw new Error("Category not found");
+        }
+        res.status(200).json(category);
+    } catch {
+        res.status(404);
+        throw new Error("Category not found");
+    }
 });
 
 export { getCategories, createCategory, getCategory, updateCategory, deleteCategory };
