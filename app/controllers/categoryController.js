@@ -46,14 +46,11 @@ const getCategory = asyncHandler(async (req, res) => {
 //@access public
 const updateCategory = asyncHandler(async (req, res) => {
     try {
-        const category =
-            await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const category = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-        if (!category)
-        
-        {
+        if (!category) {
             res.status(404);
-                throw new Error("Category not found");
+            throw new Error("Category not found");
         }
         res.status(200).json(category);
     } catch {
